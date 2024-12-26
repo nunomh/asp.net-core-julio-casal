@@ -1,2 +1,26 @@
-GET http://localhost:5190
 GET http://localhost:5190/games
+
+###
+GET http://localhost:5190/games/1
+
+###
+POST http://localhost:5190/games
+Content-Type: application/json
+
+{
+	"name": "Game 1",
+	"genre": "Action",
+	"price": 59.99,
+	"releaseDate": "2020-01-01"
+}
+
+###
+PUT http://localhost:5190/games/1
+Content-Type: application/json
+
+{
+	"name": "Game 1 Updated",
+	"genre": "Action",
+	"price": 59.99,
+	"releaseDate": "2020-01-01"
+}
