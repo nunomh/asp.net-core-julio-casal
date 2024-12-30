@@ -29,13 +29,13 @@ public static class GamesEndpoints
 
 	public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
 	{
-		var group = app.MapGroup("/games");
+		var group = app.MapGroup("games");
 
 		// GET /games
-		group.MapGet("/games", () => games);
+		group.MapGet("/", () => games);
 
 		// GET /games/{id}
-		group.MapGet("/games/{id}", (int id) =>
+		group.MapGet("/{id}", (int id) =>
 		{
 			GameDto? game = games.Find(game => game.Id == id);
 
@@ -44,7 +44,7 @@ public static class GamesEndpoints
 		.WithName(GetGameEndpointName);
 
 		// POST /games
-		group.MapPost("/games", (CreateGameDto newGame) =>
+		group.MapPost("/", (CreateGameDto newGame) =>
 		{
 			GameDto game = new(
 				games.Count + 1,
@@ -60,7 +60,7 @@ public static class GamesEndpoints
 		});
 
 		// PUT /games/{id}
-		group.MapPut("/games/{id}", (int id, UpdateGameDto updatedGame) =>
+		group.MapPut("/{id}", (int id, UpdateGameDto updatedGame) =>
 		{
 			int index = games.FindIndex(game => game.Id == id);
 
@@ -81,7 +81,7 @@ public static class GamesEndpoints
 		});
 
 		// DELETE /games/{id}
-		group.MapDelete("/games/{id}", (int id) =>
+		group.MapDelete("/{id}", (int id) =>
 		{
 			games.RemoveAll(game => game.Id == id);
 
