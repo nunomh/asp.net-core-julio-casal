@@ -33,6 +33,8 @@ ou `dotnet run` dentro do projeto. Corre sem debugger.
 
 MinimalApis.Extensions - `dotnet add package MinimalApis.Extensions --version 0.11.0`
 EntityFrameworkCore.Sqlite - `dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 8.0.2`
+dotnet-ef - `dotnet tool install --global dotnet-ef --version 8.0.2` - for the entity framework migration
+EntityFrameworkCore.Design - `dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.2` - for the entity framework migration
 
 ---
 

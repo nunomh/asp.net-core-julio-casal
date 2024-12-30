@@ -32,3 +32,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+ASPNETCoreWebAPITutorial.GameStore.API/GameStore.db
+ASPNETCoreWebAPITutorial.GameStore.API/GameStore.db-shm
+ASPNETCoreWebAPITutorial.GameStore.API/GameStore.db-wal
