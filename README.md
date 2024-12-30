@@ -29,6 +29,13 @@ ou `dotnet run` dentro do projeto. Corre sem debugger.
 
 ---
 
+### Packages
+
+MinimalApis.Extensions - `dotnet add package MinimalApis.Extensions --version 0.11.0`
+EntityFrameworkCore.Sqlite - `dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 8.0.2`
+
+---
+
 ### What is a REST API
 
 API - Application Programming Interface  

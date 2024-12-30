@@ -29,7 +29,10 @@ public static class GamesEndpoints
 
 	public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
 	{
-		var group = app.MapGroup("games");
+		var group = app.MapGroup("games")
+					   .WithParameterValidation();
+		// WithParameterValidation comes from MinimalApis.Extensions package. used to validate the parameters specified in the CreateGameDto like required
+		// can be used here globally or in a specific endpoint
 
 		// GET /games
 		group.MapGet("/", () => games);
@@ -58,6 +61,7 @@ public static class GamesEndpoints
 
 			return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game); // 201 Created
 		});
+
 
 		// PUT /games/{id}
 		group.MapPut("/{id}", (int id, UpdateGameDto updatedGame) =>
