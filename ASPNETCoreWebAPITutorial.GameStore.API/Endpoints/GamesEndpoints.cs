@@ -1,4 +1,6 @@
+using ASPNETCoreWebAPITutorial.GameStore.API.Data;
 using ASPNETCoreWebAPITutorial.GameStore.API.Dtos;
+using ASPNETCoreWebAPITutorial.GameStore.API.Entities;
 
 namespace ASPNETCoreWebAPITutorial.GameStore.API.Endpoints;
 
@@ -47,19 +49,39 @@ public static class GamesEndpoints
 		.WithName(GetGameEndpointName);
 
 		// POST /games
-		group.MapPost("/", (CreateGameDto newGame) =>
+		group.MapPost("/", (CreateGameDto newGame, GameStoreContext dbContext) =>
 		{
-			GameDto game = new(
-				games.Count + 1,
-				newGame.Name,
-				newGame.Genre,
-				newGame.Price,
-				newGame.ReleaseDate
+			// GameDto game = new(
+			// 	games.Count + 1,
+			// 	newGame.Name,
+			// 	newGame.Genre,
+			// 	newGame.Price,
+			// 	newGame.ReleaseDate
+			// ); // commented out to use dbContext
+
+			Game game = new()
+			{
+				Name = newGame.Name,
+				Genre = dbContext.Genres.Find(newGame.GenreId),
+				GenreId = newGame.GenreId,
+				Price = newGame.Price,
+				ReleaseDate = newGame.ReleaseDate
+			};
+
+			// games.Add(game);
+
+			dbContext.Games.Add(game);
+			dbContext.SaveChanges();
+
+			GameDto gameDto = new(
+				game.Id,
+				game.Name,
+				game.Genre!.Name,
+				game.Price,
+				game.ReleaseDate
 			);
 
-			games.Add(game);
-
-			return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game); // 201 Created
+			return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, gameDto); // 201 Created
 		});
 
 
