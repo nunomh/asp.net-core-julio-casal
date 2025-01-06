@@ -1,6 +1,7 @@
 using ASPNETCoreWebAPITutorial.GameStore.API.Data;
 using ASPNETCoreWebAPITutorial.GameStore.API.Dtos;
 using ASPNETCoreWebAPITutorial.GameStore.API.Entities;
+using ASPNETCoreWebAPITutorial.GameStore.API.Mapping;
 
 namespace ASPNETCoreWebAPITutorial.GameStore.API.Endpoints;
 
@@ -8,7 +9,7 @@ public static class GamesEndpoints
 {
 	const string GetGameEndpointName = "GetGame";
 
-	private static readonly List<GameDto> games = [
+	private static readonly List<GameSummaryDto> games = [
 		new(
 		1,
 		"Street Fighter II",
@@ -40,9 +41,11 @@ public static class GamesEndpoints
 		group.MapGet("/", () => games);
 
 		// GET /games/{id}
-		group.MapGet("/{id}", (int id) =>
+		group.MapGet("/{id}", (int id, GameStoreContext dbContext) =>
 		{
-			GameDto? game = games.Find(game => game.Id == id);
+			// GameDto? game = games.Find(game => game.Id == id); // commented out to use dbContext
+
+			Game? game = dbContext.Games.Find(id);
 
 			return game is null ? Results.NotFound() : Results.Ok(game);
 		})
@@ -59,29 +62,35 @@ public static class GamesEndpoints
 			// 	newGame.ReleaseDate
 			// ); // commented out to use dbContext
 
-			Game game = new()
-			{
-				Name = newGame.Name,
-				Genre = dbContext.Genres.Find(newGame.GenreId),
-				GenreId = newGame.GenreId,
-				Price = newGame.Price,
-				ReleaseDate = newGame.ReleaseDate
-			};
-
 			// games.Add(game);
+
+
+
+			// Game game = new()
+			// {
+			// 	Name = newGame.Name,
+			// 	Genre = dbContext.Genres.Find(newGame.GenreId),
+			// 	GenreId = newGame.GenreId,
+			// 	Price = newGame.Price,
+			// 	ReleaseDate = newGame.ReleaseDate
+			// };
+
+			Game game = newGame.ToEntity();
+			game.Genre = dbContext.Genres.Find(newGame.GenreId);
 
 			dbContext.Games.Add(game);
 			dbContext.SaveChanges();
 
-			GameDto gameDto = new(
-				game.Id,
-				game.Name,
-				game.Genre!.Name,
-				game.Price,
-				game.ReleaseDate
-			);
+			// GameSummaryDto gameDto = new(
+			// 	game.Id,
+			// 	game.Name,
+			// 	game.Genre!.Name,
+			// 	game.Price,
+			// 	game.ReleaseDate
+			// );
 
-			return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, gameDto); // 201 Created
+			// return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, gameDto); // 201 Created
+			return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game.ToDto()); // 201 Created
 		});
 
 
@@ -95,7 +104,7 @@ public static class GamesEndpoints
 				return Results.NotFound();
 			}
 
-			games[index] = new GameDto(
+			games[index] = new GameSummaryDto(
 				id,
 				updatedGame.Name,
 				updatedGame.Genre,

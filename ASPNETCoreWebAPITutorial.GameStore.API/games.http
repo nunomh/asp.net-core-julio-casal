@@ -9,7 +9,7 @@ POST http://localhost:5190/games
 Content-Type: application/json
 
 {
-	"name": "Game 3",
+	"name": "Game 4",
 	//"genre": "Action",
 	"genreId": 5,
 	"price": 59.99,
